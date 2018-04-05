@@ -12,6 +12,7 @@
 		let winningMove;
 		playerSelection = playerSelection.toLowerCase();
 
+		console.log("Computer plays "+computerSelection);
 		if(playerSelection == computerSelection)
 			return "It's a Draw";
 
@@ -35,5 +36,30 @@
 			losingMove = playerSelection;
 		}
 		return winner+" wins the round! "+winningMove+" beats "+losingMove+".";
+	}
+
+	function game(){
+		let playerScore = 0, computerScore = 0;
+		let playerSelection = "", roundResult = "";
+
+
+			for(i = 0; i<5; i++){
+				console.log("Round "+ (i+1));
+				playerSelection = prompt("What's your move?");
+
+				roundResult = playRound(playerSelection,computerPlay());
+
+				console.log(roundResult);	
+
+				if(roundResult.includes("Player")) playerScore++;
+				else if (roundResult.includes("Computer")) computerScore++;
+				console.log("Score: "+playerScore+" to "+computerScore);
+
+			}
+			console.log("Game over.");
+			if (playerScore > computerScore) console.log("You win!!");
+			else if (playerScore == computerScore) console.log("What are the odds?! It's a Draw!!");
+			else console.log("You lose!");
+
 	}
 </script>
