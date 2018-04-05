@@ -1,26 +1,27 @@
 <script type="text/javascript">
 	function computerPlay(){
 		let random = Math.random()*100;
-		return random <= 33? "Rock" :
-				 (random > 33 && random <= 66)? "Paper": 
-				 "Scissors";
+		return random <= 33? "rock" :
+				 (random > 33 && random <= 66)? "paper": 
+				 "scissors";
 	}
 
 	function playRound(playerSelection, computerSelection){
 		let winner;
 		let losingMove;
 		let winningMove;
+		playerSelection = playerSelection.toLowerCase();
 
 		if(playerSelection == computerSelection)
 			return "It's a Draw";
 
 		if
 		(
-			(playerSelection =="Rock" && computerSelection == "Scissors")
+			(playerSelection =="rock" && computerSelection == "scissors")
 			||
-			(playerSelection =="Paper" && computerSelection == "Rock")
+			(playerSelection =="paper" && computerSelection == "rock")
 			||
-			(playerSelection =="Scissors" && computerSelection == "Paper")
+			(playerSelection =="scissors" && computerSelection == "paper")
 		)
 		{	
 			winner = "Player";
