@@ -6,4 +6,33 @@
 				 "Scissors";
 	}
 
+	function playRound(playerSelection, computerSelection){
+		let winner;
+		let losingMove;
+		let winningMove;
+
+		if(playerSelection == computerSelection)
+			return "It's a Draw";
+
+		if
+		(
+			(playerSelection =="Rock" && computerSelection == "Scissors")
+			||
+			(playerSelection =="Paper" && computerSelection == "Rock")
+			||
+			(playerSelection =="Scissors" && computerSelection == "Paper")
+		)
+		{	
+			winner = "Player";
+			winningMove = playerSelection;
+			losingMove = computerSelection;
+		}
+		else 
+		{
+			winner = "Computer";
+			winningMove = computerSelection;
+			losingMove = playerSelection;
+		}
+		return winner+" wins the round! "+winningMove+" beats "+losingMove+".";
+	}
 </script>
