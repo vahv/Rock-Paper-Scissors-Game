@@ -1,3 +1,9 @@
 <script type="text/javascript">
-	
+	function computerPlay(){
+		let random = Math.random()*100;
+		return random <= 33? "Rock" :
+				 (random > 33 && random <= 66)? "Paper": 
+				 "Scissors";
+	}
+
 </script>
