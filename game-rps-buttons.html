@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>Rock Paper Scissors</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link href="https://fonts.googleapis.com/css?family=Bowlby+One+SC|Patua+One" rel="stylesheet">
+	<style>
+		body{
+			display: grid;
+			grid-template-columns: repeat(12, 1fr);
+    		grid-template-rows: repeat(8,1fr);
+			background-image: url("https://www.planwallpaper.com/static/images/6909249-black-hd-background.jpg");
+		}	
+		.header{
+			color: aliceblue;
+			font-family: 'Bowlby One SC', cursive;
+			font-size: 4rem;			
+			text-align: center;
+			grid-column: span 12;
+			grid-row: span 2;
+			
+		}
+		.container{
+			grid-column: 3/ span 8;
+			grid-row: span 4;
+			background-color: black;
+			display: flex;
+			flex-direction: column;	
+			justify-content: space-between;
+			border-radius: 8px;
+			box-shadow: 0 4px 20px 0 rgba(0, 0, 0, 0.884), 0 6px 48px 0 rgba(0, 0, 0, 0.932);
+		}
+		.score-bar{
+			border-radius: 8px 8px 0 0;
+			display: flex;
+			background: gray;
+			color: aliceblue;
+			justify-content: space-around;
+			font-family: 'Patua One', cursive;
+			width: 100%;
+			opacity: 0;
+			transition: opacity 100ms ease-in 50ms;
+		}
+		.display{
+			height: 150px;
+			display: flex;
+			justify-content: center
+		}
+		.display > span{
+			width: 80%;
+			border-radius: 8px;
+			color:azure;
+			font-family: 'Patua One', cursive;
+			font-size: 4em;
+			text-align: center;
+		}
+		.controls{
+
+			display: flex;
+			justify-content: space-around;
+		}
+		.controls > button{
+			height: auto;
+			width: 20%;
+			border: 2px solid azure;
+			background-color: black;
+			margin-bottom: 2em;
+			color: azure;
+			font-size: 2rem;
+		}
+		.controls > button:active{
+			border: 2px solid black;
+			background-color: azure;
+			color: black;
+		}
+		.hidden{
+			display: none;
+		}
+	</style>
+</head>
+<body>
+	<h1 class="header">Rock Paper Scissors Battle!</h1>
+	<div class="container">
+		<div class="score-bar">
+			<span>Your Score: 0</span>
+			<span>Computer Score: 0</span>
+		</div>
+		<div class="display">
+			<span id ="output">Press Play to start</span>
+		</div>
+		<div class="controls">
+			<button onclick = "playRound('rock')" class="hidden">Rock</button>
+			<button onclick = "playRound('paper')" class="hidden">Paper</button>
+			<button onclick = "playRound('scissors')" class="hidden">Scissors</button>
+			<button onclick="newGame()">Play</button>
+		</div>
+	</div>
+</body>
+</html>
+
+<script type="text/javascript">
+	let yourScore = 0;
+	let computerScore = 0;
+	let roundsPlayed = 0;
+	const scoreDisplays = document.querySelectorAll('.score-bar > span');
+	const output = document.querySelector('#output');
+	
+	function newGame(){
+		showScoreBar();
+		resetScores();
+		updateScoreBar();
+		updateOutputDisplay('new round');
+		toggleDisplayButtons();
+	}
+	
+	function updateScoreBar(){
+		scoreDisplays[0].textContent = `Your Score: ${yourScore}`;
+		scoreDisplays[1].textContent = `Computer Score: ${computerScore}`;
+	}
+
+	function toggleDisplayButtons(option = 'all'){
+		const buttons = Array.from(document.querySelectorAll('button')); 
+		if (option === 'all')
+				buttons.forEach(button => button.classList.toggle('hidden'));
+		else{
+			switch(option){
+				case 'control':
+					const filteredButtons = buttons.filter(button => button.textContent.includes('Rock')
+							||button.textContent.includes('Paper')
+									||button.textContent.includes('Scissors'));
+					filteredButtons.forEach(button => button.classList.toggle('hidden'));
+				break;
+				case 'play':
+					const playButton = buttons.filter(button => button.textContent.includes('Play'));
+					if(playButton[0].textContent !== 'Play again') playButton[0].textContent = 'Play again';
+					playButton[0].classList.toggle('hidden');
+				break;
+			}
+		}
+	
+	}
+
+	function updateOutputDisplay(option, messages){
+		switch(option){
+			case 'new round':
+				output.textContent = 'Select your move';
+			break;
+			case 'play round':
+				output.textContent = messages[0];
+				setTimeout(function(){
+					output.textContent = messages[1];
+					setTimeout(function(){
+						output.textContent = messages[2];
+					},1000);
+				},1000);
+			break;
+			case 'Game Over':
+				setTimeout(function(){
+					output.textContent = output.textContent = 'Game Over';
+					setTimeout( function(){
+						output.textContent = winnerMessage();
+					},1000);
+				},1000);
+			break;
+		}
+	}
+
+	function showScoreBar(){
+		const scoreBar = document.querySelector('.score-bar');
+		scoreBar.style.cssText ='opacity:1';
+	}
+
+	
+	function computerPlay(){
+		let random = Math.random()*100;
+		return random <= 33? "rock" :
+				 (random > 33 && random <= 66)? "paper": 
+				 "scissors";
+	}
+
+	function playRound(playerSelection, computerSelection = computerPlay()){
+		toggleDisplayButtons('control');
+		let winner;
+		let messages = [
+			`You play ${playerSelection}`,
+			`Computer plays ${computerSelection}`
+		]
+
+		if(playerSelection === computerSelection){
+			messages.push("It's a Draw");
+		}
+		else{
+			if(winsAgaints(playerSelection, computerSelection)){	
+				winner = "You";
+				yourScore++;
+			}
+			else{
+				winner = "Computer";
+				computerScore++;
+			}
+			messages.push(`${winner} ${winner === "You"?'win':'wins'} the round`);
+		}
+		
+		updateOutputDisplay("play round", messages);
+		roundsPlayed++;
+		
+
+		if(isGameOver()){
+			setTimeout(function(){
+				updateScoreBar();
+				updateOutputDisplay("Game Over");
+					setTimeout(function(){
+						toggleDisplayButtons('play');
+					},3000);
+				},3000);
+		}
+		else{
+			updateOutputDisplay("new round");
+			setTimeout(function(){
+				toggleDisplayButtons('control');
+				updateScoreBar();
+				},3000);
+		}
+	}
+
+	function resetScores(){
+		yourScore = 0;
+		computerScore = 0;
+		roundsPlayed = 0;
+	}
+
+	function isGameOver(){
+		return (roundsPlayed == 5)? true : false;
+	}
+
+	function winnerMessage(){
+		return (yourScore > computerScore)? 'You win':(yourScore==computerScore)?'Draw':'You lose';  
+	}
+
+	function winsAgaints(selection1, selection2){
+		if((selection1 =="rock" && selection2 == "scissors")
+						||(selection1 =="paper" && selection2 == "rock")
+								||(selection1 =="scissors" && selection2 == "paper"))
+			return true;
+		else
+			return false;
+	}
+	/*function game(){
+		let playerScore = 0, computerScore = 0;
+		let playerSelection = "", roundResult = "";
+
+
+			for(i = 0; i<5; i++){
+				console.log("Round "+ (i+1));
+				playerSelection = prompt("What's your move?");
+
+				roundResult = playRound(playerSelection,computerPlay());
+
+				console.log(roundResult);	
+
+				if(roundResult.includes("Player")) playerScore++;
+				else if (roundResult.includes("Computer")) computerScore++;
+				console.log("Score: "+playerScore+" to "+computerScore);
+
+			}
+			console.log("Game over.");
+			if (playerScore > computerScore) console.log("You win!");
+			else if (playerScore == computerScore) console.log("What are the odds?! It's a Draw!");
+			else console.log("You lose!");
+
+	}*/
+</script>
